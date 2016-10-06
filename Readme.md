@@ -4,6 +4,8 @@
 > Higher-order validation functions for
 > [ember-changeset-validations](https://github.com/DockYard/ember-changeset-validations).
 
+For background info, please see the thread [here](https://github.com/DockYard/ember-changeset-validations/issues/97).
+
 This addon provides `and` and `or` higher-order functions, that allow you to
 *compose* together validations. It is useful if you want the short-circuit
 behavior of `&&` and `||`. For example:
@@ -25,6 +27,9 @@ export const {
   ),
 }
 ```
+
+Note that the `and` and `or` utils work with both synchronous and asynchronous
+validators.
 
 ## Install
 
