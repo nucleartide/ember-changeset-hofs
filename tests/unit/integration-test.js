@@ -7,22 +7,24 @@ import Ember from 'ember'
 
 describe('integration', function() {
   it('should work with anything', async function() {
+    let evaluationCount = 0
+
     const validators1 = [
-      () => 'first error',
-      () => Ember.RSVP.resolve('second error'),
-      () => 'third error',
+      () => { evaluationCount++; return 'first error' },
+      () => { evaluationCount++; return Ember.RSVP.resolve('second error') },
+      () => { evaluationCount++; return 'third error' },
     ]
 
     const validators2 = [
-      () => false,
-      () => 'fifth error',
-      () => Ember.RSVP.reject('sixth error'),
+      () => { evaluationCount++; return false },
+      () => { evaluationCount++; return 'fifth error' },
+      () => { evaluationCount++; return Ember.RSVP.reject('sixth error') },
     ]
 
     const validators3 = [
-      () => 'seventh error',
-      () => true,
-      () => 'ninth error',
+      () => { evaluationCount++; return 'seventh error' },
+      () => { evaluationCount++; return true },
+      () => { evaluationCount++; return 'ninth error' },
     ]
 
     const validationFn = and(
@@ -38,6 +40,7 @@ describe('integration', function() {
     )
 
     assert.equal(await validationFn(), 'first error')
+    assert.equal(evaluationCount, 1)
   })
 })
 
