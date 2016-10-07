@@ -12,8 +12,10 @@ function handleResult(result) {
 
 export default function or(...validators) {
   return (key, newValue, oldValue, changes, object) => {
+    let validation
+
     for (let i = 0; i < validators.length; i++) {
-      const validation = validators[i](...arguments)
+      validation = validators[i](...arguments)
 
       if (isPromise(validation)) {
         let promise = validation.then(handleResult)
@@ -30,7 +32,7 @@ export default function or(...validators) {
       if (isTrue(validation)) return true
     }
 
-    return false
+    return validation
   }
 }
 
