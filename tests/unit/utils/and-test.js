@@ -70,7 +70,67 @@ describe('and', function() {
       assert.deepEqual(didExecute, [true, false, false])
     })
 
-    it('should work with an array of arguments')
+    it('should work with arbitrary nesting', function() {
+      {
+        const validators1 = [
+          () => 'first error',
+          () => 'second error',
+          () => 'third error',
+        ]
+
+        const validators2 = [
+          () => 'fourth error',
+          () => 'fifth error',
+          () => 'sixth error',
+        ]
+
+        const validators3 = [
+          () => 'seventh error',
+          () => 'eighth error',
+          () => 'ninth error',
+        ]
+
+        const validationFn = and(
+          and(
+            and(...validators1),
+            and(...validators2)
+          ),
+          and(...validators3)
+        )
+
+        assert.equal(validationFn(), 'first error')
+      }
+
+      {
+        const validators1 = [
+          () => true,
+          () => true,
+          () => true,
+        ]
+
+        const validators2 = [
+          () => true,
+          () => 'leeroy jenkins',
+          () => true,
+        ]
+
+        const validators3 = [
+          () => true,
+          () => true,
+          () => true,
+        ]
+
+        const validationFn = and(
+          and(
+            and(...validators1),
+            and(...validators2)
+          ),
+          and(...validators3)
+        )
+
+        assert.equal(validationFn(), 'leeroy jenkins')
+      }
+    })
   })
 
   describe('async validators', function() {
@@ -109,6 +169,66 @@ describe('and', function() {
       assert.deepEqual(didExecute, [true, false, false])
     })
 
-    it('should work with an array of arguments')
+    it('should work with arbitrary nesting', async function() {
+      {
+        const validators1 = [
+          () => Ember.RSVP.resolve('first error'),
+          () => Ember.RSVP.resolve('second error'),
+          () => Ember.RSVP.resolve('third error'),
+        ]
+
+        const validators2 = [
+          () => Ember.RSVP.resolve('fourth error'),
+          () => Ember.RSVP.resolve('fifth error'),
+          () => Ember.RSVP.resolve('sixth error'),
+        ]
+
+        const validators3 = [
+          () => Ember.RSVP.resolve('seventh error'),
+          () => Ember.RSVP.resolve('eighth error'),
+          () => Ember.RSVP.resolve('ninth error'),
+        ]
+
+        const validationFn = and(
+          and(
+            and(...validators1),
+            and(...validators2)
+          ),
+          and(...validators3)
+        )
+
+        assert.equal(await validationFn(), 'first error')
+      }
+
+      {
+        const validators1 = [
+          () => Ember.RSVP.resolve(true),
+          () => Ember.RSVP.resolve(true),
+          () => Ember.RSVP.resolve(true),
+        ]
+
+        const validators2 = [
+          () => Ember.RSVP.resolve(true),
+          () => Ember.RSVP.resolve('leeroy jenkins'),
+          () => Ember.RSVP.resolve(true),
+        ]
+
+        const validators3 = [
+          () => Ember.RSVP.resolve(true),
+          () => Ember.RSVP.resolve(true),
+          () => Ember.RSVP.resolve(true),
+        ]
+
+        const validationFn = and(
+          and(
+            and(...validators1),
+            and(...validators2)
+          ),
+          and(...validators3)
+        )
+
+        assert.equal(await validationFn(), 'leeroy jenkins')
+      }
+    })
   })
 })

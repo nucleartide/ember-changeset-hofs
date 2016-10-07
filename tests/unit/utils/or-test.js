@@ -70,7 +70,78 @@ describe('or', function() {
       assert.deepEqual(didExecute, [true, false, false])
     })
 
-    it('should work with an array of arguments')
+    it('should return the last error if all validators return errors', function() {
+      const validators = [
+        () => 'first error',
+        () => 'second error',
+        () => 'third error',
+      ]
+
+      const validationFn = or(...validators)
+      assert.equal(validationFn(), 'third error')
+    })
+
+    it('should work with arbitrary nesting', function() {
+      {
+        const validators1 = [
+          () => 'first error',
+          () => 'second error',
+          () => 'third error',
+        ]
+
+        const validators2 = [
+          () => 'fourth error',
+          () => 'fifth error',
+          () => 'sixth error',
+        ]
+
+        const validators3 = [
+          () => 'seventh error',
+          () => 'eighth error',
+          () => 'ninth error',
+        ]
+
+        const validationFn = or(
+          or(
+            or(...validators1),
+            or(...validators2)
+          ),
+          or(...validators3)
+        )
+
+        assert.equal(validationFn(), 'ninth error')
+      }
+
+      {
+        const validators1 = [
+          () => 'first error',
+          () => 'second error',
+          () => 'third error',
+        ]
+
+        const validators2 = [
+          () => 'fourth error',
+          () => true, // derp
+          () => 'sixth error',
+        ]
+
+        const validators3 = [
+          () => 'seventh error',
+          () => 'eighth error',
+          () => 'ninth error',
+        ]
+
+        const validationFn = or(
+          or(
+            or(...validators1),
+            or(...validators2)
+          ),
+          or(...validators3)
+        )
+
+        assert.equal(validationFn(), true)
+      }
+    })
   })
 
   describe('async validators', function() {
@@ -113,7 +184,78 @@ describe('or', function() {
       assert.deepEqual(didExecute, [true, false, false])
     })
 
-    it('should work with an array of arguments')
+    it('should return the last error if all validators return errors', async function() {
+      const validators = [
+        () => Ember.RSVP.resolve('first error'),
+        () => Ember.RSVP.resolve('second error'),
+        () => Ember.RSVP.resolve('third error'),
+      ]
+
+      const validationFn = or(...validators)
+      assert.deepEqual(await validationFn(), 'third error')
+    })
+
+    it('should work with arbitrary nesting', async function() {
+      {
+        const validators1 = [
+          () => Ember.RSVP.resolve('first error'),
+          () => Ember.RSVP.resolve('second error'),
+          () => Ember.RSVP.resolve('third error'),
+        ]
+
+        const validators2 = [
+          () => Ember.RSVP.resolve('fourth error'),
+          () => Ember.RSVP.resolve('fifth error'),
+          () => Ember.RSVP.resolve('sixth error'),
+        ]
+
+        const validators3 = [
+          () => Ember.RSVP.resolve('seventh error'),
+          () => Ember.RSVP.resolve('eighth error'),
+          () => Ember.RSVP.resolve('ninth error'),
+        ]
+
+        const validationFn = or(
+          or(
+            or(...validators1),
+            or(...validators2)
+          ),
+          or(...validators3)
+        )
+
+        assert.equal(await validationFn(), 'ninth error')
+      }
+
+      {
+        const validators1 = [
+          () => Ember.RSVP.resolve('first error'),
+          () => Ember.RSVP.resolve('second error'),
+          () => Ember.RSVP.resolve('third error'),
+        ]
+
+        const validators2 = [
+          () => Ember.RSVP.resolve('fourth error'),
+          () => Ember.RSVP.resolve(true), // derp
+          () => Ember.RSVP.resolve('sixth error'),
+        ]
+
+        const validators3 = [
+          () => Ember.RSVP.resolve('seventh error'),
+          () => Ember.RSVP.resolve('eighth error'),
+          () => Ember.RSVP.resolve('ninth error'),
+        ]
+
+        const validationFn = or(
+          or(
+            or(...validators1),
+            or(...validators2)
+          ),
+          or(...validators3)
+        )
+
+        assert.equal(await validationFn(), true)
+      }
+    })
   })
 })
 
