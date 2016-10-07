@@ -15,7 +15,7 @@ export default function or(...validators) {
     let validation
 
     for (let i = 0; i < validators.length; i++) {
-      validation = validators[i](...arguments)
+      validation = validators[i](key, newValue, oldValue, changes, object)
 
       if (isPromise(validation)) {
         let promise = validation.then(handleResult)

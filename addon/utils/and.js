@@ -18,7 +18,7 @@ function handleResult(result) {
 export default function and(...validators) {
   return (key, newValue, oldValue, changes, object) => {
     for (let i = 0; i < validators.length; i++) {
-      const validation = validators[i](...arguments)
+      const validation = validators[i](key, newValue, oldValue, changes, object)
 
       if (isPromise(validation)) {
         let promise = validation.then(handleResult)

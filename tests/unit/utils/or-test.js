@@ -256,6 +256,27 @@ describe('or', function() {
         assert.equal(await validationFn(), true)
       }
     })
+
+    it('should pass arguments to validators', function() {
+      {
+        const validators = [
+          (key, newValue, oldValue, changes, object) => [key, newValue, oldValue, changes, object],
+        ]
+
+        const validationFn = or(...validators)
+        assert.deepEqual(validationFn(1, 2, 3, 4, 5), [1, 2, 3, 4, 5])
+      }
+
+      {
+        const validators = [
+          (key, newValue) => false,
+          (key, newValue, oldValue, changes, object) => [key, newValue, oldValue, changes, object],
+        ]
+
+        const validationFn = or(...validators)
+        assert.deepEqual(validationFn(1, 2, 3, 4, 5), [1, 2, 3, 4, 5])
+      }
+    })
   })
 })
 

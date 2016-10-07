@@ -230,5 +230,29 @@ describe('and', function() {
         assert.equal(await validationFn(), 'leeroy jenkins')
       }
     })
+
+    it('should pass arguments to validators', function() {
+      {
+        const validators = [
+          (key, newValue, oldValue, changes, object) => [key, newValue, oldValue, changes, object],
+          (key, newValue) => true,
+          (key, newValue) => true,
+        ]
+
+        const validationFn = and(...validators)
+        assert.deepEqual(validationFn(1, 2, 3, 4, 5), [1, 2, 3, 4, 5])
+      }
+
+      {
+        const validators = [
+          (key, newValue) => true,
+          (key, newValue, oldValue, changes, object) => [key, newValue, oldValue, changes, object],
+          (key, newValue) => true,
+        ]
+
+        const validationFn = and(...validators)
+        assert.deepEqual(validationFn(1, 2, 3, 4, 5), [1, 2, 3, 4, 5])
+      }
+    })
   })
 })
