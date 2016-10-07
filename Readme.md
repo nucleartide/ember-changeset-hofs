@@ -29,7 +29,22 @@ export const {
 ```
 
 Note that the `and` and `or` utils work with both synchronous and asynchronous
-validators.
+validators. You can nest `and` and `or` expressions arbitrarily, and you can
+mix sync and async validators however you [want](tests/unit/integration-test.js):
+
+```js
+const validationFn = and(
+  and(
+    and(...someValidators),
+    or(...someMoreValidators),
+    or(
+      or(...someValidators),
+      and(...someMoreValidators),
+    )
+  ),
+  or(...evenMoreValidators)
+)
+```
 
 ## Install
 
