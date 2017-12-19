@@ -1,10 +1,6 @@
+<h1 align="center"><br><br><img alt="ember-changeset-hofs" src="assets/title.svg" width="350px"><br><br><br></h1>
 
-# ember-changeset-hofs
-
-> Higher-order validation functions for
-> [ember-changeset-validations](https://github.com/DockYard/ember-changeset-validations).
-
-For background info, please see the thread [here](https://github.com/DockYard/ember-changeset-validations/issues/97).
+`ember-changeset-hofs` provides higher-order validation functions for [`ember-changeset-validations`](https://github.com/DockYard/ember-changeset-validations).
 
 This addon provides `and` and `or` higher-order functions, that allow you to
 *compose* together validations. It is useful if you want the short-circuit
